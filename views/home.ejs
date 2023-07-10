@@ -1,0 +1,11 @@
+<html>
+    <body>
+        <h1>Welcome</h1>
+        <h2>List of Albums</h2>
+        <ul>
+            <% albums.forEach(function(album) { %>
+              <li><a href="/albums/<%= album.title %>"> <%= album.title %></a></li>
+            <% }); %>
+          </ul>
+    </body>
+</html>

@@ -1,20 +1,29 @@
-const http = require("http");
+import express from 'express';
+import { getAll, getItem } from './data.js';
 
-http.createServer((req,res) => {
-    console.log(req.url)
-    var path = req.url.toLowerCase();
-    switch(path) {
-        case '/':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('Home Page');
-            break;
-        case '/about':
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end('I\'m 31 years old and will be finishing my web devlopement certificate at Seattle Central College this semester');
-            break;
-        default:
-            res.writeHead(404, {'Content-Type': 'text/plain'});
-            res.end('Not found');
-        break;
-    }
-}).listen(process.env.PORT || 3000);
+const app = express();
+app.set('port', process.env.PORT || 3000);
+app.use(express.static('public'));
+app.set('view engine', 'ejs');
+
+const albums = getAll();
+
+app.get('/', (req, res) => {
+    res.render('home', {albums});
+});
+
+app.get('/albums/:title', (req, res) => {
+    const album = getItem('title', req.params.title);
+    if (album) {
+        res.render('album', {album});
+    } 
+});
+
+app.use((req,res) => {
+    res.status(404);
+    res.send('404 - Not found');
+});
+
+app.listen(app.get('port'), () => {
+    console.log('Express started'); 
+  });
