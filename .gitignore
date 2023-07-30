@@ -4,3 +4,4 @@ node_modules
 .DS_Store
 index copy.js
 testdb.js
+albums.js
