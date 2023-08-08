@@ -1,8 +1,33 @@
 <html>
-  <body>
-    <h1><%= result.title %></h1>
-    <p>Artist: <%= result.artist %></p>
-    <p>Genre: <%= result.genre %></p>
-    <p>Release: <%= result.release %></p>
-  </body>
+<head>
+    <title>Album Details</title>
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+<!-- Don't use this in production: -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+    const album = <%- JSON.stringify(result) %>;
+    console.log(album);
+    const App = () => {
+      return (
+        <div>
+          <h2>{album.title}</h2>
+          <p>Artist: {album.artist}</p>
+          <p>Genre: {album.genre}</p>
+          <p>Release: {album.release}</p>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+
+</body>
 </html>

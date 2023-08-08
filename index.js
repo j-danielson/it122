@@ -101,12 +101,13 @@ app.delete('/api/albums/:title', (req, res) => {
 });
 
 app.get('/albums/:title', (req,res,next) => {
-    // db query can use request parameters
-    Album.findOne({ title:req.params.title }).lean()
-        .then((album) => {
-            res.render('album', {result: album} );
-        })
-        .catch(err => next(err));
+  // db query can use request parameters
+  Album.findOne({ title:req.params.title }).lean()
+      .then((album) => {
+        console.log(album);
+          res.render('album', { result: album }); // Pass the album object here
+      })
+      .catch(err => next(err));
 });
 
 app.use((req,res) => {

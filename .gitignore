@@ -5,3 +5,6 @@ node_modules
 index copy.js
 testdb.js
 albums.js
+album copy.ejs
+album copy 2.ejs
+home copy.ejs
