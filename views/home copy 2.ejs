@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>Albums</title>
+
+</head>
+
+<body>
+
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+<!-- Don't use this in production: -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<script type="text/babel">
+    const albums = <%- JSON.stringify(albums) %>;
+    const App = () => {
+
+      const itemClicked = (e) => {
+        console.log('item clicked');
+        console.log(e.target.innerText);
+      }
+
+      return (
+        <div>
+          <h2>Albums:</h2>
+          {albums.map((album, index) => (
+                    <div key={index}><a href={`/albums/${encodeURIComponent(album.title)}`}>{album.title}</a></div>
+                ))}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+
+</body>
+</html>
