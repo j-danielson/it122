@@ -35,9 +35,19 @@
         { props.album && 
           <form>
             <b>Title</b>: <input type="text" name="title" onChange={props.changeHandler} value={props.album.title || ''} />
-            <b>Title</b>: <input type="text" name="artist" onChange={props.changeHandler} value={props.album.artist || ''} />
-            <b>Title</b>: <input type="text" name="release" onChange={props.changeHandler} value={props.album.release || ''} />
-            <b>Title</b>: <input type="text" name="genre" onChange={props.changeHandler} value={props.album.genre || ''} />
+            <b>artist</b>: <input type="text" name="artist" onChange={props.changeHandler} value={props.album.artist || ''} />
+            <b>release</b>: <input type="text" name="release" onChange={props.changeHandler} value={props.album.release || ''} />
+            <b>genre</b>: <input type="text" name="genre" onChange={props.changeHandler} value={props.album.genre || ''} />
+            <br />
+            <button type="button" onClick={props.clearForm}>
+            Clear Form
+          </button>
+          <button type="button" onClick={props.saveItem}>
+            Save
+          </button>
+          <button type="button" onClick={props.deleteItem}>
+            Delete
+          </button>
           </form>
 
         }
@@ -48,6 +58,17 @@
   const App = () => {
     const [albums, setAlbums] = React.useState(albumsData);
     const [selectedAlbum, setSelectedAlbum] = React.useState();
+
+    React.useEffect(() => {
+      const fetchData = async () => {
+        fetch("/api/albums")
+        .then(res => res.json())
+        .then((json) => {
+          setAlbums(json);
+        })
+      }
+      fetchData()
+    }, []);
 
     const itemClicked = (e) => {
       let found = albumsData.find((album) => {return album.title === e.target.innerText });
@@ -66,13 +87,57 @@
       updatedAlbums[albumIndex] = newAlbum;
       setAlbums(updatedAlbums);
     }
+
+    const clearForm = () => {
+      setSelectedAlbum({});
+    }
+
+    const saveItem = () => {
+      if (!selectedAlbum.title) {
+        return;
+      }
+      fetch("/api/albums", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(selectedAlbum)
+      })
+      .then(res => res.json())
+      .then((data) => {
+        if (!selectedAlbum._id) {
+          selectedAlbum._id = data._id;
+          setSelectedAlbum(selectedAlbum);
+          let newAlbums = [...albums];
+          newAlbums.push(selectedAlbum);
+          setAlbums(newAlbums);
+        }
+      });
+    };
+
+    const deleteItem = () => {
+  console.log('should delete');
+  let id = selectedAlbum._id;
+  console.log('this albums id', id)
+  fetch(`/api/albums/${id}`, {
+    method: 'DELETE'
+  })
+  .then(res => res.json())
+  .then((data) => {
+    // remove item from list
+    const newAlbums = albums.filter((album) => {
+      return album._id !== id;
+    });
+    // update state with new array
+    setAlbums(newAlbums);
+    setSelectedAlbum({});
+  });
+};
     
  
     return (
       <div>
       <Albums albums={albums} clickHandler={itemClicked} />
       <hr />
-      <Details album={selectedAlbum} changeHandler={albumChanged} />
+      <Details album={selectedAlbum} changeHandler={albumChanged} clearForm={clearForm} saveItem={saveItem} deleteItem={deleteItem} />
       </div>
     );
   }

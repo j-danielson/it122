@@ -85,10 +85,10 @@ app.put('/api/albums/:title', (req, res) => {
     });
 });
 
-app.delete('/api/albums/:title', (req, res) => {
-  const title = req.params.title;
+app.delete('/api/albums/:id', (req, res) => {
+  const albumId = req.params.id;
 
-  Album.findOneAndDelete({ title })
+  Album.findOneAndDelete({ _id: albumId })
     .then((deletedAlbum) => {
       if (!deletedAlbum) {
         return res.status(404).json({ error: 'Album not found' });
